@@ -33,9 +33,9 @@ jobs:
       - run: echo "current git ref is `git rev-parse HEAD`"
       - uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: "16"
           cache: "npm"
-          cache-dependency-path: package-lock.json
+          cache-dependency-path: yarn-lock.json
       - name: Install NPM
         run: npm install
       - name: Run Import
