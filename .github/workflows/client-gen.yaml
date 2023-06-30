@@ -16,38 +16,13 @@ on:
         required: true
 
 jobs:
-  performImport:
-    name: Import
-    concurrency:
-      cancel-in-progress: false
-      group: import-api-specs
+  validateSpecs:
+    name: Validate OpenAPI Specs
     runs-on: ubuntu-latest
     env:
-      GITHUB_TOKEN: ${{secrets.COMMIT_TOKEN}}
+      GITHUB_TOKEN: ${{secrets.ACCESS_TOKEN}}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/github-script@v6
         with:
-          ref: ${{github.ref}}
-          token: ${{secrets.COMMIT_TOKEN}}
-          persist-credentials: true
-      - run: echo "current git ref is `git rev-parse HEAD`"
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "14"
-          cache: "npm"
-          cache-dependency-path: package-lock.json
-      - name: Install NPM
-        run: npm install
-      - name: Run Import
-        run: |
-          node ./import-spec.js --repo '${{github.event.inputs.repo}}' --paths '${{github.event.inputs.paths}}' --ref '${{github.event.inputs.ref}}'
-      - name: Run Validation
-        run: |
-          ls services/**/*.y*ml | xargs ./node_modules/.bin/lint-openapi -e
-      - name: Commit Changes
-        run: |
-          git config --global user.email "BenDaMyth@gmail.com"
-          git config --global user.name "AdeThorMiwa"
-          git add . && git commit -m "Imported changes in ${{github.event.inputs.paths}} from ${{github.event.inputs.repo}}"
-      - name: Push Changes
-        run: git push origin
+          script: |
+            console.log(context)
