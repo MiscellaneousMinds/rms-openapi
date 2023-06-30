@@ -1,0 +1,53 @@
+name: Validate and Generate API Clients
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: "Source repository of the specs, format: OWNER/repo e.g. AdeThorMiwa/specs"
+        required: true
+      ref:
+        description: "Source branch to import from"
+        required: false
+        default: main
+      paths:
+        description: "Paths in the repo to import from, comma-separated"
+        type: string
+        required: true
+
+jobs:
+  performImport:
+    name: Import
+    concurrency:
+      cancel-in-progress: false
+      group: import-api-specs
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{secrets.COMMIT_TOKEN}}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{github.ref}}
+          token: ${{secrets.COMMIT_TOKEN}}
+          persist-credentials: true
+      - run: echo "current git ref is `git rev-parse HEAD`"
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "14"
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+      - name: Install NPM
+        run: npm install
+      - name: Run Import
+        run: |
+          node ./import-spec.js --repo '${{github.event.inputs.repo}}' --paths '${{github.event.inputs.paths}}' --ref '${{github.event.inputs.ref}}'
+      - name: Run Validation
+        run: |
+          ls services/**/*.y*ml | xargs ./node_modules/.bin/lint-openapi -e
+      - name: Commit Changes
+        run: |
+          git config --global user.email "BenDaMyth@gmail.com"
+          git config --global user.name "AdeThorMiwa"
+          git add . && git commit -m "Imported changes in ${{github.event.inputs.paths}} from ${{github.event.inputs.repo}}"
+      - name: Push Changes
+        run: git push origin

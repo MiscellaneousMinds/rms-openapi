@@ -1,0 +1,9 @@
+{
+  "version": "1.0.9",
+  "githubOrganization": "MiscellaneousMinds",
+  "developerName": "AdeThorMiwa",
+  "developerEmail": "BenDaMyth@gmail.com",
+  "developerOrganization": "Miscellaneous Minds",
+  "packageName": "com.miscellaneousminds.services",
+  "ingressUrl": "https://staging-ingress.miscminds.com"
+}
