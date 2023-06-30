@@ -34,8 +34,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "16"
-          cache: "yarn"
-          cache-dependency-path: yarn.lock
+          cache: "npm"
+          cache-dependency-path: package-lock.json
       - name: Install NPM
         run: npm install
       - name: Run Import
