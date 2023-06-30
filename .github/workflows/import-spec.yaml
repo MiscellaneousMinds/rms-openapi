@@ -1,4 +1,4 @@
-name: Validate and Generate API Clients
+name: Import Specs
 
 on:
   workflow_dispatch:
