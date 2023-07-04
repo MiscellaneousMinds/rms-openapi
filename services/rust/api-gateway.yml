@@ -1,0 +1,96 @@
+openapi: 3.0.3
+x-organization: rust
+x-service-id: api-gateway
+info:
+  version: 1.0.9
+  title: Rust API Gateway
+  description: >-
+    **Introduction**
+
+    API Gateway for Rust
+
+
+    This specification describes API endpoints that are available to the public
+    internet via the API gateway. The different endpoints require different
+    authentication schemes, see documentation for what applies to the operation
+    you want to access.
+
+
+    **Errors**
+
+    Uses conventional HTTP response codes to indicate success or failure. In
+
+    general:
+     
+    - `2xx` status codes indicate success. Codes in the
+
+    - `4xx` range
+
+    indicate a client error (e.g. required parameters, failed request etc.).
+
+    - `5xx` status codes indicate a server error occurred.
+  contact:
+    name: Miscelleneous Minds
+    email: BenDaMyth@gmail.com
+  license:
+    name: UNLICENSED
+servers:
+  - url: https://rust-dev.api.miscminds.io
+    description: Default Gateway
+paths:
+  /cart:
+    get:
+      security:
+        - authToken: []
+      tags:
+        - cart-cart
+      summary: Fetch cart items
+      operationId: getCartItems
+      x-visibility: public
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+    x-original-path: /cart
+  /product/products:
+    get:
+      security:
+        - authToken: []
+      tags:
+        - product-product
+      summary: Fetch product list
+      operationId: getProductList
+      x-visibility: public
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+    x-original-path: /products
+tags:
+  - name: product-product
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+  securitySchemes:
+    authToken:
+      type: apiKey
+      name: x-auth-token
+      in: header
+x-preserve-refs: []
