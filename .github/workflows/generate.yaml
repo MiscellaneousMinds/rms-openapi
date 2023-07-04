@@ -5,7 +5,7 @@ on:
       - "services/**"
       - ".validaterc"
       - ".spectral.yml"
-      - "generate.js"
+      - "**/generate.js"
       - "config.json"
       - "**/generate.yaml"
 
