@@ -1,9 +1,11 @@
 {
-  "version": "1.0.9",
+  "version": "1.0.0",
   "githubOrganization": "MiscellaneousMinds",
   "developerName": "AdeThorMiwa",
   "developerEmail": "BenDaMyth@gmail.com",
+  "githubRepository": "MiscellaneousMinds/artifacts",
   "developerOrganization": "Miscellaneous Minds",
   "packageName": "com.miscellaneousminds.services",
-  "ingressUrl": "https://staging-ingress.miscminds.com"
+  "ingressUrl": "https://staging-ingress.miscminds.com",
+  "generatorCommand": "java -cp './code-templates/java/java-spring-custom.jar:./codegen/openapi-generator-cli.jar' org.openapitools.codegen.OpenAPIGenerator"
 }
