@@ -11,6 +11,7 @@
   "dependencies": {
     "@ibm-cloud/openapi-ruleset": "^0.45.3",
     "@octokit/core": "^4.2.0",
+    "@openapitools/openapi-generator-cli": "^2.6.0",
     "handlebars": "^4.7.7",
     "ibm-openapi-validator": "0.97.3",
     "js-yaml": "~4.1.0",

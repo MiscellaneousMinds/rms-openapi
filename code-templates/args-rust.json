@@ -1,0 +1,7 @@
+{
+  "generator-name": "rust",
+  "template-dir": "code-templates/rust",
+  "configOptions": {
+    "packageName": "openapi-client"
+  }
+}
