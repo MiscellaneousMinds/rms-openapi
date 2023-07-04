@@ -7,6 +7,7 @@ on:
       - ".spectral.yml"
       - "generate.js"
       - "config.json"
+      - "**/generate.yaml"
 
   workflow_dispatch:
     inputs: {}
