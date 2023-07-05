@@ -30,18 +30,15 @@ const buildPackageBuildScript = async (options, deploy = true) => {
   let script = "";
   switch (options["generator-name"]) {
     case "rust":
-      script += `if [[ ! -e ./.cargo/config.toml ]]; then
-  mkdir -p .cargo
-  touch ./.cargo/config.toml
-fi\n`;
-      script += `if [[ ! -e ./.cargo/credentials ]]; then
-  touch ./.cargo/credentials
-fi\n`;
+      script += `mkdir -p .cargo || exit 24\n`;
       script += `echo "[registries]" >> ./.cargo/config.toml\n`;
       script += `echo '${rustRegistryName} = { index = "${rustRegistryIndex}" }' >> ./.cargo/config.toml\n`;
       script += `echo "[registries.${rustRegistryName}]" >> ./.cargo/credentials\n`;
       script += `echo "token = $RUST_REGISTRY_API_KEY" >> ./.cargo/credentials\n`;
-      script += `cargo publish --registry ${rustRegistryName}\n\n`;
+      script += `cat .cargo/config.toml && cat .cargo/credentials`;
+      if (deploy) {
+        script += `cargo publish --registry ${rustRegistryName}\n\n`;
+      }
       break;
     // eslint-disable-next-line no-fallthrough
     default:
