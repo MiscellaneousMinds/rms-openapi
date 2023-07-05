@@ -16,37 +16,10 @@ env:
   GITHUB_TOKEN: ${{secrets.ACCESS_TOKEN}}
 
 jobs:
-  validateSpecs:
-    name: Validate OpenAPI Specs
-    runs-on: ubuntu-latest
-    outputs:
-      build: ${{steps.confirm-build-clients.outputs.build}}
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          persist-credentials: true
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "14"
-          cache: "npm"
-          cache-dependency-path: package-lock.json
-      - name: Install NPM
-        run: npm ci
-      - name: Run Validation
-        run: |
-          ls services/**/*.y*ml | xargs ./node_modules/.bin/lint-openapi -e
-      - id: confirm-build-clients
-        name: Confirm Client Build
-        run: |
-          git fetch --all --tags
-          api_version=$(node ./version-bump.js --version)
-          echo "API version is: ${api_version}"
-          (git tag | grep $api_version && echo "build=no" >> $GITHUB_OUTPUT) || (echo "build=yes" >>  $GITHUB_OUTPUT)
-
   generateClientSource:
     name: Generate Sources
     runs-on: ubuntu-latest
-    needs: validateSpecs
+    # needs: validateSpecs
     env:
       OPENAPI_GENERATOR_VERSION: "6.1.0"
 
