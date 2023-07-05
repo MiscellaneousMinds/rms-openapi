@@ -98,6 +98,7 @@ jobs:
       RUST_REGISTRY_API_KEY: ${{secrets.RUST_REGISTRY_API_KEY}}
       CARGO_REGISTRIES_CLOUDSMITH_INDEX: https://dl.cloudsmith.io/basic/miscellaneous-minds/pulse-repo/cargo/index.git
       CARGO_REGISTRIES_CLOUDSMITH_TOKEN: ${{secrets.RUST_REGISTRY_API_KEY}}
+      CARGO_NET_GIT_FETCH_WITH_CLI: true
 
     steps:
       - uses: de-vri-es/setup-git-credentials@v2
