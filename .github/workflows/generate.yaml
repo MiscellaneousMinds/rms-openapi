@@ -96,6 +96,8 @@ jobs:
     needs: generateClientSource
     env:
       CARGO_REGISTRIES_CLOUDSMITH_INDEX: https://dl.cloudsmith.io/${{secrets.CLOUDSMITH_TOKEN}}/miscellaneous-minds/pulse-repo/cargo/index.git
+      CARGO_REGISTRIES_CLOUDSMITH_TOKEN: ${{secrets.CLOUDSMITH_TOKEN}}
+      RUST_REGISTRY_API_KEY: ${{secrets.RUST_REGISTRY_API_KEY}}
 
     steps:
       - name: Download Generated Source
@@ -114,5 +116,7 @@ jobs:
 
       - name: Loop and Publish Rust Packages
         run: |
+          git config --global credential.helper store
+          echo "https://oloruntomiwa-quadri:$RUST_REGISTRY_API_KEY@dl.cloudsmith.io" > ~/.git-credentials
           ls -l generated-sources/rust/* > /dev/null || exit 0
           for filename in generated-sources/rust/*; do sh "$filename/publish.sh"; done
