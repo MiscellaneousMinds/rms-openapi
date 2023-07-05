@@ -16,11 +16,41 @@ const {
   packageName,
   githubOrganization,
   version,
+  rustRegistryName,
+  rustRegistryIndex,
 } = config;
+
+const { RUST_REGISTRY_API_KEY } = process.env;
 
 const IS_RELEASE = process.env.GITHUB_REF === "refs/heads/main";
 const SNAPSHOT_NUMBER = Math.round(Date.now() / 10000);
 const CHECKPOINT = "[ $? != 0 ] && exit 25";
+
+const buildPackageBuildScript = async (options, deploy = true) => {
+  let script = "";
+  switch (options["generator-name"]) {
+    case "rust":
+      `if [[ ! -e .cargo/config.toml ]]; then
+  mkdir -p .cargo
+  touch .cargo/config.toml
+fi`;
+      script += `echo "[registries]" >> .cargo/config.toml`;
+      script += `echo "${rustRegistryName} = { index = '${rustRegistryIndex}' }" >> .cargo/config.toml`;
+      script += `echo "[registries.${rustRegistryName}]" >> .cargo/credentials`;
+      script += `echo "token = ${RUST_REGISTRY_API_KEY}" >> .cargo/credentials`;
+      script += `cargo publish --registry ${rustRegistryName}`;
+      break;
+    // eslint-disable-next-line no-fallthrough
+    default:
+      throw new Error("Unable to generate build script for specified language");
+  }
+
+  script += `\n${CHECKPOINT}\n`;
+
+  return `echo '#!/bin/bash
+cd "$(dirname "$0")"
+${script}' > ${options.output}/publish.sh`;
+};
 
 const getGeneratorArguments = () => {
   const base = require("./code-templates/args-base.json");
@@ -89,7 +119,12 @@ const createScriptForSpec = async (specPath, languages, output) => {
       "",
       `echo "Generating files for file -> ${specPath}, Language -> ${language}"`
     );
-    outputScript.push(generatorCommand, CHECKPOINT, "");
+    outputScript.push(
+      generatorCommand,
+      CHECKPOINT,
+      await buildPackageBuildScript(langConfig),
+      ""
+    );
   }
 
   return outputScript;

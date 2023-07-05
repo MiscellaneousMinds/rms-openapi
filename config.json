@@ -7,5 +7,7 @@
   "developerOrganization": "Miscellaneous Minds",
   "packageName": "com.miscellaneousminds.services",
   "ingressUrl": "https://staging-ingress.miscminds.com",
-  "generatorCommand": "java -cp './code-templates/java/java-spring-custom.jar:./codegen/openapi-generator-cli.jar' org.openapitools.codegen.OpenAPIGenerator"
+  "generatorCommand": "java -cp './code-templates/java/java-spring-custom.jar:./codegen/openapi-generator-cli.jar' org.openapitools.codegen.OpenAPIGenerator",
+  "rustRegistryName": "miscellaneous-minds-pulse-repo",
+  "rustRegistryIndex": "https://dl.cloudsmith.io/basic/miscellaneous-minds/pulse-repo/cargo/index.git"
 }
