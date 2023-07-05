@@ -100,6 +100,9 @@ jobs:
       CARGO_REGISTRIES_CLOUDSMITH_TOKEN: ${{secrets.RUST_REGISTRY_API_KEY}}
 
     steps:
+      - uses: de-vri-es/setup-git-credentials@v2
+        with:
+          credentials: ${{secrets.GIT_CREDENTIALS}}
       - name: Download Generated Source
         uses: actions/download-artifact@v3
         with:
