@@ -27,8 +27,6 @@ const SNAPSHOT_NUMBER = Math.round(Date.now() / 10000);
 const CHECKPOINT = "[ $? != 0 ] && exit 25";
 
 const buildPackageBuildScript = async (options, deploy = true) => {
-  console.log("Token is: ", process.env.GITHUB_TOKEN?.slice(0, 5));
-  console.log("Token is: ", process.env.RUST_REGISTRY_API_KEY?.slice(0, 5));
   let script = "";
   switch (options["generator-name"]) {
     case "rust":
@@ -40,9 +38,9 @@ fi\n`;
   touch ./.cargo/credentials
 fi\n`;
       script += `echo "[registries]" >> ./.cargo/config.toml\n`;
-      script += `echo "${rustRegistryName} = { index = \"${rustRegistryIndex}\" }" >> ./.cargo/config.toml\n`;
+      script += `echo '${rustRegistryName} = { index = "${rustRegistryIndex}" }' >> ./.cargo/config.toml\n`;
       script += `echo "[registries.${rustRegistryName}]" >> ./.cargo/credentials\n`;
-      script += `echo "token = ${RUST_REGISTRY_API_KEY}" >> ./.cargo/credentials\n`;
+      script += `echo "token = $RUST_REGISTRY_API_KEY" >> ./.cargo/credentials\n`;
       script += `cargo publish --registry ${rustRegistryName}\n\n`;
       break;
     // eslint-disable-next-line no-fallthrough

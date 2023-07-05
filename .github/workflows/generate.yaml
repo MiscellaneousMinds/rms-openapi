@@ -49,7 +49,6 @@ jobs:
     needs: validateSpecs
     env:
       OPENAPI_GENERATOR_VERSION: "6.1.0"
-      RUST_REGISTRY_API_KEY: ${{secrets.RUST_REGISTRY_API_KEY}}
 
     if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && needs.validateSpecs.outputs.build == 'yes'
 
@@ -95,6 +94,8 @@ jobs:
     name: Build and Publish - Rust
     runs-on: ubuntu-latest
     needs: generateClientSource
+    env:
+      RUST_REGISTRY_API_KEY: ${{secrets.RUST_REGISTRY_API_KEY}}
 
     steps:
       - name: Download Generated Source
