@@ -95,14 +95,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: generateClientSource
     env:
-      RUST_REGISTRY_API_KEY: ${{secrets.RUST_REGISTRY_API_KEY}}
-      CARGO_REGISTRIES_CLOUDSMITH_INDEX: https://dl.cloudsmith.io/basic/miscellaneous-minds/pulse-repo/cargo/index.git
-      CARGO_REGISTRIES_CLOUDSMITH_TOKEN: ${{secrets.RUST_REGISTRY_API_KEY}}
+      CARGO_REGISTRIES_CLOUDSMITH_INDEX: https://dl.cloudsmith.io/${{secrets.CLOUDSMITH_TOKEN}}/miscellaneous-minds/pulse-repo/cargo/index.git
 
     steps:
-      - uses: de-vri-es/setup-git-credentials@v2
-        with:
-          credentials: ${{secrets.GIT_CREDENTIALS}}
       - name: Download Generated Source
         uses: actions/download-artifact@v3
         with:
