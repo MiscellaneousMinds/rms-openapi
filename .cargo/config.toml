@@ -1,2 +1,0 @@
-[registries]
-miscellaneous-minds-pulse-repo = { index = 'https://dl.cloudsmith.io/basic/miscellaneous-minds/pulse-repo/cargo/index.git' }
