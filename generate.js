@@ -20,8 +20,6 @@ const {
   rustRegistryIndex,
 } = config;
 
-const { RUST_REGISTRY_API_KEY } = process.env;
-
 const IS_RELEASE = process.env.GITHUB_REF === "refs/heads/main";
 const SNAPSHOT_NUMBER = Math.round(Date.now() / 10000);
 const CHECKPOINT = "[ $? != 0 ] && exit 25";
@@ -35,7 +33,7 @@ const buildPackageBuildScript = async (options, deploy = true) => {
       script += `echo \\"${rustRegistryName} = { index = '${rustRegistryIndex}' }\\" >> ./.cargo/config.toml\n`;
       script += `echo \\"[registries.${rustRegistryName}]\\" >> ./.cargo/credentials\n`;
       script += `echo \\"token = $RUST_REGISTRY_API_KEY\\" >> ./.cargo/credentials\n`;
-      script += `echo v1 cat .cargo/credentials\n`;
+      script += `cat .cargo/credentials\n`;
       if (deploy) {
         script += `cargo publish --registry ${rustRegistryName}\n\n`;
       }
