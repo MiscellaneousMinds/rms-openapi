@@ -29,9 +29,9 @@ const buildPackageBuildScript = async (options, deploy = true) => {
   switch (options["generator-name"]) {
     case "rust":
       script += `cargo package\n`;
-      script += `ls -a && echo "${options.configOptions.packageName}"\n`;
+      script += `cd target && ls -a && cd ..\n`;
       if (deploy) {
-        script += `cloudsmith push cargo miscellaneous-minds/pulse-repo target/package/${options.configOptions.packageName}-${version}.crate`;
+        script += `cloudsmith push cargo miscellaneous-minds/pulse-repo ./target/package/${options.configOptions.packageName}-${version}.crate`;
       }
       break;
     // eslint-disable-next-line no-fallthrough
