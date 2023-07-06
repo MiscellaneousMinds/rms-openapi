@@ -2,7 +2,7 @@ openapi: 3.0.3
 x-organization: rust
 x-service-id: api-gateway
 info:
-  version: 1.0.9
+  version: 1.0.0
   title: Rust API Gateway
   description: >-
     **Introduction**
@@ -88,6 +88,8 @@ components:
         id:
           type: string
           format: uuid
+        description:
+          type: string
   securitySchemes:
     authToken:
       type: apiKey

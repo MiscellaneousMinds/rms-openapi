@@ -11,7 +11,7 @@
     {
       "repository": "MiscellaneousMinds/rms",
       "sourcePath": "./product-service/spec/api-spec.yaml",
-      "hash": "b179408d6b1776c5d254d2b3b0a7dc017c8ed8e9e6e296dd421633eded9ffded",
+      "hash": "629e392cc40a189ea136f3f60bdd4b0c0041a09254bce69658468f25024d99f8",
       "targetPath": "rust/product.yml",
       "organization": "rust",
       "serviceId": "product"
