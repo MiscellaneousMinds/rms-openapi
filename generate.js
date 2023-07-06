@@ -21,7 +21,7 @@ const {
 
 const IS_RELEASE = process.env.GITHUB_REF === "refs/heads/main";
 const SNAPSHOT_NUMBER = Math.round(Date.now() / 10000);
-const CHECKPOINT = "[ \\$\? != 0 ] && exit 25";
+const CHECKPOINT = "[ $? != 0 ] && exit 25";
 
 const buildPackageBuildScript = async (options, deploy = true) => {
   let script = "";
@@ -38,7 +38,7 @@ const buildPackageBuildScript = async (options, deploy = true) => {
       throw new Error("Unable to generate build script for specified language");
   }
 
-  script += `\n${CHECKPOINT}\n`;
+  script += `\n [ \\$\? != 0 ] && exit 25 \n`;
 
   return `echo "#!/bin/bash
 cd \\"\\$(dirname \\"\\$0\\")\\"
