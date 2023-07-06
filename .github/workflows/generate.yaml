@@ -152,9 +152,9 @@ jobs:
           echo "Version Number: $tag_name"
           git tag "$tag_name" && git push origin "$tag_name"
 
-      - name: Checkout Dev
-        run: |
-          git checkout dev
+      # - name: Checkout Dev
+      #   run: |
+      #     git checkout dev
 
       - name: Run Version Bump
         run: |
