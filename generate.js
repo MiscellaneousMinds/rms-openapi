@@ -29,9 +29,9 @@ const buildPackageBuildScript = async (options, deploy = true) => {
   switch (options["generator-name"]) {
     case "rust":
       script += `cargo package\n`;
-      script += `cd target && ls -a && cd ..\n`;
+      script += `cd target/package && ls -a && cd ../..\n`;
       if (deploy) {
-        script += `cloudsmith push cargo miscellaneous-minds/pulse-repo ./target/package/${options.configOptions.packageName}-${version}.crate`;
+        script += `cloudsmith push cargo miscellaneous-minds/pulse-repo ./target/package/${options.configOptions.packageName}-${options.configOptions.packageVersion}.crate`;
       }
       break;
     // eslint-disable-next-line no-fallthrough
@@ -46,7 +46,7 @@ cd \\"\\$(dirname \\"\\$0\\")\\"
 ${script}" > ${options.output}/publish.sh`;
 };
 
-const getGeneratorArguments = () => {
+const getGeneratorArguments = (options) => {
   const base = require("./code-templates/args-base.json");
   const allArgs = {
     rust: {
@@ -58,7 +58,7 @@ const getGeneratorArguments = () => {
   return substituteProperties(allArgs, {
     _GIT_REPO_ID_: path.basename(githubRepository),
     _GIT_USER_ID_: githubOrganization.toLowerCase(),
-    _ARTIFACT_VERSION_: version,
+    _ARTIFACT_VERSION_: options.version,
     _VERSION_SUFFIX_: IS_RELEASE ? "RELEASE" : "SNAPSHOT",
     _PUB_VERSION_: `${version}${
       IS_RELEASE ? "" : "-SNAPSHOT." + SNAPSHOT_NUMBER
@@ -92,14 +92,16 @@ const buildGeneratorCommand = (options) => {
 
 const createScriptForSpec = async (specPath, languages, output) => {
   let outputScript = [];
-  let generatorArgs = getGeneratorArguments();
   const fileContent = fs.readFileSync(specPath, { encoding: "utf8" });
   const apiSpec = YAML.load(fileContent);
 
   const serviceId = apiSpec[X.SERVICE_ID];
   const organization = apiSpec[X.ORGANIZATION];
+  const version = apiSpec.info.version;
   const fullName = `${organization}-${serviceId}`;
   const outputPrefix = serviceId === "common" ? "00000-" : "";
+
+  let generatorArgs = getGeneratorArguments({ version });
 
   for (const language of languages) {
     const langConfig = substituteProperties(generatorArgs[language], {

@@ -1,6 +1,7 @@
 {
   "generator-name": "rust",
   "configOptions": {
-    "packageName": "_ARTIFACT_ID_-api-client"
+    "packageName": "_ARTIFACT_ID_-api-client",
+    "packageVersion": "_ARTIFACT_VERSION_"
   }
 }
