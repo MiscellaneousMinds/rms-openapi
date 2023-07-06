@@ -116,4 +116,4 @@ jobs:
       - name: Loop and Publish Rust Packages
         run: |
           ls -l generated-sources/rust/* > /dev/null || exit 0
-          for filename in generated-sources/rust/*; do sh publish.sh; done
+          for filename in generated-sources/rust/*; do sh "$filename/publish.sh"; done
