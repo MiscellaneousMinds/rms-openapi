@@ -21,7 +21,7 @@ const {
 
 const IS_RELEASE = process.env.GITHUB_REF === "refs/heads/main";
 const SNAPSHOT_NUMBER = Math.round(Date.now() / 10000);
-const CHECKPOINT = "[ \$? != 0 ] && exit 25";
+const CHECKPOINT = "[ \\$\? != 0 ] && exit 25";
 
 const buildPackageBuildScript = async (options, deploy = true) => {
   let script = "";
