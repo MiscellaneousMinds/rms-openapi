@@ -37,7 +37,7 @@ importWithOptions(getCliOptions())
   .then(async (imported) => {
     if (imported.length < 1) {
       console.error("No files imported");
-      process.exit(1);
+      // process.exit(1);
     } else {
       await makeFromStates(imported);
       console.log(`Successfully imported ${imported.length} file(s)`);
