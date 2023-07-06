@@ -131,3 +131,36 @@ jobs:
           persist-credentials: true
           fetch-depth: 0
       - run: echo "current git ref is `git rev-parse HEAD`"
+      - uses: actions/setup-node@v3
+        name: Setup Node
+        with:
+          node-version: "16"
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Install NPM
+        run: npm install
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "BenDaMyth@gmail.com"
+          git config --global user.name "AdeThorMiwa"
+
+      - name: Tag Current
+        run: |
+          tag_name="v$(node ./version-bump --version)"
+          echo "Version Number: $tag_name"
+          git tag "$tag_name" && git push origin "$tag_name"
+
+      - name: Checkout Dev
+        run: |
+          git checkout dev
+
+      - name: Run Version Bump
+        run: |
+          node ./version-bump.js --semver patch
+
+      - name: Commit Changes
+        run: |
+          new_version="v$(node ./version-bump --version)"
+          git add . && git commit -m "Bumped version to ${new_version}" && git push origin
