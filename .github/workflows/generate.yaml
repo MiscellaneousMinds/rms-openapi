@@ -117,3 +117,17 @@ jobs:
         run: |
           ls -l generated-sources/rust/* > /dev/null || exit 0
           for filename in generated-sources/rust/*; do sh "$filename/publish.sh"; done
+  versionBumpDev:
+    name: Bump Dev Version
+    runs-on: ubuntu-latest
+    needs:
+      - publishRustLibs
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{github.ref}}
+          token: ${{secrets.ACCESS_TOKEN}}
+          persist-credentials: true
+          fetch-depth: 0
+      - run: echo "current git ref is `git rev-parse HEAD`"
