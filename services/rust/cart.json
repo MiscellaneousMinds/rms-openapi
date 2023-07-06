@@ -69,7 +69,7 @@
   }
  },
  "x-source-repository": "MiscellaneousMinds/rms",
- "x-source-path": "./cart-service/spec/api-spec.yaml",
+ "x-source-path": "cart-service/spec/api-spec.yaml",
  "servers": [
   {
    "url": "http://cart.rust",

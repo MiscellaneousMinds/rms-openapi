@@ -2,16 +2,16 @@
   "mappings": [
     {
       "repository": "MiscellaneousMinds/rms",
-      "sourcePath": "./cart-service/spec/api-spec.yaml",
-      "hash": "dd7d32b404faa69ae633d7af4e3d5d63e8555fcd2b664b27b62924df131b954c",
+      "sourcePath": "cart-service/spec/api-spec.yaml",
+      "hash": "6bb2fd5eb04ab86e97b384433d541adff885d6b6579471ee3b198d61ad1befad",
       "targetPath": "rust/cart.yml",
       "organization": "rust",
       "serviceId": "cart"
     },
     {
       "repository": "MiscellaneousMinds/rms",
-      "sourcePath": "./product-service/spec/api-spec.yaml",
-      "hash": "629e392cc40a189ea136f3f60bdd4b0c0041a09254bce69658468f25024d99f8",
+      "sourcePath": "product-service/spec/api-spec.yaml",
+      "hash": "53594c5da99cc427a7038329be5a105c21b84dfb840f69eb98397a78a4722049",
       "targetPath": "rust/product.yml",
       "organization": "rust",
       "serviceId": "product"
