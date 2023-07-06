@@ -95,14 +95,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: generateClientSource
     env:
-      CARGO_REGISTRIES_CLOUDSMITH_INDEX: https://dl.cloudsmith.io/${{secrets.CLOUDSMITH_TOKEN}}/miscellaneous-minds/pulse-repo/cargo/index.git
-      CARGO_REGISTRIES_CLOUDSMITH_TOKEN: ${{secrets.CLOUDSMITH_TOKEN}}
-      RUST_REGISTRY_API_KEY: ${{secrets.RUST_REGISTRY_API_KEY}}
+      CLOUDSMITH_API_KEY: ${{secrets.RUST_REGISTRY_API_KEY}}
 
     steps:
-      - uses: netlify/cloudsmith-cargo-action@v1
-        with:
-          token: ${{ secrets.CLOUDSMITH_TOKEN }}
       - name: Download Generated Source
         uses: actions/download-artifact@v3
         with:
@@ -113,13 +108,12 @@ jobs:
         run: |
           unzip downloaded-generated-sources/generated-sources.zip
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-python@v4
         with:
-          node-version: "16"
+          python-version: "3.9"
+      - run: pip install --upgrade cloudsmith-cli
 
       - name: Loop and Publish Rust Packages
         run: |
-          git config --global credential.helper store
-          echo "https://oloruntomiwa-quadri:$RUST_REGISTRY_API_KEY@dl.cloudsmith.io" > ~/.git-credentials
           ls -l generated-sources/rust/* > /dev/null || exit 0
-          for filename in generated-sources/rust/*; do sh "$filename/publish.sh"; done
+          for filename in generated-sources/rust/*; do sh publish.sh; done

@@ -1,6 +1,6 @@
 {
   "generator-name": "rust",
   "configOptions": {
-    "packageName": "openapi-client"
+    "packageName": "_ARTIFACT_ID_-api-client"
   }
 }
