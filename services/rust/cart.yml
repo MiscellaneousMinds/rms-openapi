@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
-  version: 1.0.9
-  title: Cart Microservice Cart service API
-  description: Manages user cart.
+  version: 1.0.0
+  title: Cart Microservice Product service API
+  description: Manages cart inventory
   contact:
     name: AdeThorMiwa
     email: BenDaMyth@gmail.com
@@ -17,8 +17,8 @@ paths:
         - authToken: []
       tags:
         - cart
-      summary: Fetch cart items
-      operationId: getCartItems
+      summary: Fetch cart list
+      operationId: getCartList
       x-visibility: public
       responses:
         '200':
@@ -35,13 +35,15 @@ components:
         id:
           type: string
           format: uuid
+        description:
+          type: string
   securitySchemes:
     authToken:
       type: apiKey
       name: x-auth-token
       in: header
 x-source-repository: MiscellaneousMinds/rms
-x-source-path: ./cart-service/spec/api-spec.yaml
+x-source-path: cart-service/spec/api-spec.yaml
 servers:
   - url: http://cart.rust
     description: Service Url from within cluster

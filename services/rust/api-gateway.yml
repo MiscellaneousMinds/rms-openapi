@@ -44,8 +44,8 @@ paths:
         - authToken: []
       tags:
         - cart-cart
-      summary: Fetch cart items
-      operationId: getCartItems
+      summary: Fetch cart list
+      operationId: getCartList
       x-visibility: public
       responses:
         '200':
@@ -82,6 +82,8 @@ components:
         id:
           type: string
           format: uuid
+        description:
+          type: string
     Product:
       type: object
       properties:

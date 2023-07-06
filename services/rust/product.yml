@@ -43,7 +43,7 @@ components:
       name: x-auth-token
       in: header
 x-source-repository: MiscellaneousMinds/rms
-x-source-path: ./product-service/spec/api-spec.yaml
+x-source-path: product-service/spec/api-spec.yaml
 servers:
   - url: http://product.rust
     description: Service Url from within cluster
