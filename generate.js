@@ -16,8 +16,7 @@ const {
   packageName,
   githubOrganization,
   version,
-  rustRegistryName,
-  rustRegistryIndex,
+  cloudSmithRegistry,
 } = config;
 
 const IS_RELEASE = process.env.GITHUB_REF === "refs/heads/main";
@@ -31,7 +30,7 @@ const buildPackageBuildScript = async (options, deploy = true) => {
       script += `cargo package\n`;
       script += `cd target/package && ls -a && cd ../..\n`;
       if (deploy) {
-        script += `cloudsmith push cargo miscellaneous-minds/pulse-repo ./target/package/${options.configOptions.packageName}-${options.configOptions.packageVersion}.crate`;
+        script += `cloudsmith push cargo ${cloudSmithRegistry} ./target/package/${options.configOptions.packageName}-${options.configOptions.packageVersion}.crate\n`;
       }
       break;
     // eslint-disable-next-line no-fallthrough
