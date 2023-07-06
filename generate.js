@@ -38,7 +38,7 @@ const buildPackageBuildScript = async (options, deploy = true) => {
       throw new Error("Unable to generate build script for specified language");
   }
 
-  script += `\n[ \\$\? != 0 ] && exit 25 \n`;
+  // script += `\n[ \\$\? != 0 ] && exit 25 \n`; TODO: 
 
   return `echo "#!/bin/bash
 cd \\"\\$(dirname \\"\\$0\\")\\"
