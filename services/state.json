@@ -3,7 +3,7 @@
     {
       "repository": "MiscellaneousMinds/rms",
       "sourcePath": "product-service/spec/api-spec.yaml",
-      "hash": "53594c5da99cc427a7038329be5a105c21b84dfb840f69eb98397a78a4722049",
+      "hash": "68c3b814d89fb4a326a04df7560683d8f721815c5e96cf6d49cce3f416e468e7",
       "targetPath": "rust/product.yml",
       "organization": "rust",
       "serviceId": "product"

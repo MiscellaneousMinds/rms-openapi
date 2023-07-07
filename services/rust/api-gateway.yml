@@ -2,7 +2,7 @@ openapi: 3.0.3
 x-organization: rust
 x-service-id: api-gateway
 info:
-  version: 1.0.0
+  version: 1.0.1
   title: Rust API Gateway
   description: >-
     **Introduction**
@@ -38,23 +38,6 @@ servers:
   - url: https://rust-dev.api.miscminds.io
     description: Default Gateway
 paths:
-  /cart:
-    get:
-      security:
-        - authToken: []
-      tags:
-        - cart-cart
-      summary: Fetch cart list
-      operationId: getCartList
-      x-visibility: public
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cart'
-    x-original-path: /cart
   /product/products:
     get:
       security:
@@ -76,22 +59,12 @@ tags:
   - name: product-product
 components:
   schemas:
-    Cart:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        description:
-          type: string
     Product:
       type: object
       properties:
         id:
           type: string
           format: uuid
-        description:
-          type: string
   securitySchemes:
     authToken:
       type: apiKey

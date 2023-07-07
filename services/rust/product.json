@@ -1,7 +1,7 @@
 {
  "openapi": "3.0.3",
  "info": {
-  "version": "1.0.0",
+  "version": "1.0.2",
   "title": "Cart Microservice Product service API",
   "description": "Manages product inventory",
   "contact": {
@@ -53,9 +53,6 @@
      "id": {
       "type": "string",
       "format": "uuid"
-     },
-     "description": {
-      "type": "string"
      }
     }
    }
