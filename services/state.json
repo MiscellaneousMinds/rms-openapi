@@ -7,14 +7,6 @@
       "targetPath": "rust/product.yml",
       "organization": "rust",
       "serviceId": "product"
-    },
-    {
-      "repository": "MiscellaneousMinds/rms",
-      "sourcePath": "cart-service/spec/api-spec.yaml",
-      "hash": "6bb2fd5eb04ab86e97b384433d541adff885d6b6579471ee3b198d61ad1befad",
-      "targetPath": "rust/cart.yml",
-      "organization": "rust",
-      "serviceId": "cart"
     }
   ]
 }
