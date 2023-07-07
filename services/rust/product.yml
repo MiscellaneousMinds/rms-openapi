@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  version: 1.0.0
+  version: 1.0.3
   title: Cart Microservice Product service API
   description: Manages product inventory
   contact:
@@ -35,8 +35,6 @@ components:
         id:
           type: string
           format: uuid
-        description:
-          type: string
   securitySchemes:
     authToken:
       type: apiKey
