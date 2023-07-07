@@ -1,0 +1,51 @@
+openapi: 3.0.3
+info:
+  version: 1.0.2
+  title: Cart Microservice Product service API
+  description: Manages cart inventory
+  contact:
+    name: AdeThorMiwa
+    email: BenDaMyth@gmail.com
+x-service-id: cart
+x-organization: rust
+tags:
+  - name: cart
+paths:
+  /cart:
+    get:
+      security:
+        - authToken: []
+      tags:
+        - cart
+      summary: Fetch cart list
+      operationId: getCartList
+      x-visibility: public
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        description:
+          type: string
+  securitySchemes:
+    authToken:
+      type: apiKey
+      name: x-auth-token
+      in: header
+x-source-repository: MiscellaneousMinds/rms
+x-source-path: cart-service/spec/api-spec.yaml
+servers:
+  - url: http://cart.rust
+    description: Service Url from within cluster
+  - url: https://staging-ingress.miscminds.com/rust/cart
+    description: URL to access staging deployment.
