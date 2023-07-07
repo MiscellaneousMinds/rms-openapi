@@ -30,7 +30,7 @@ const buildPackageBuildScript = async (options, deploy = true) => {
       script += `cargo package\n`;
       script += `cd target/package && ls -a && cd ../..\n`;
       if (deploy) {
-        script += `cloudsmith push cargo ${cloudSmithRegistry} ./target/package/${options.configOptions.packageName}-${options.configOptions.packageVersion}.crate\n`;
+        script += `cloudsmith push cargo ${cloudSmithRegistry} ./target/package/${options.configOptions.packageName}-${options.configOptions.packageVersion}.crate --republish\n`;
       }
       break;
     // eslint-disable-next-line no-fallthrough
@@ -38,7 +38,7 @@ const buildPackageBuildScript = async (options, deploy = true) => {
       throw new Error("Unable to generate build script for specified language");
   }
 
-  // script += `\n[ \\$\? != 0 ] && exit 25 \n`; TODO: 
+  // script += `\n[ \\$\? != 0 ] && exit 25 \n`; TODO:
 
   return `echo "#!/bin/bash
 cd \\"\\$(dirname \\"\\$0\\")\\"
