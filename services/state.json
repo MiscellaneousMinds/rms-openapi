@@ -11,7 +11,7 @@
     {
       "repository": "AdeThorMiwa/stashio",
       "sourcePath": "specs/api-spec.yaml",
-      "hash": "e50620251993f5536665fbbb950c3a74ac60d2c8c6ed3b032de64f48f147ef4b",
+      "hash": "d0fa2c8402eb1f31520cd3322cbbe39f957a677863d3436c592108bc107ca86a",
       "targetPath": "AdeThorMiwa/stashio-api.yml",
       "organization": "AdeThorMiwa",
       "serviceId": "stashio-api",

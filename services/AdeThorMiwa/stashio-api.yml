@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  version: 1.0.0
+  version: 1.0.5
   title: Stashio API
   description: Stashio monolith backend
   contact:
