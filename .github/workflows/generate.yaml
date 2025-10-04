@@ -51,6 +51,7 @@ jobs:
               api_version=$(node ./version-bump.js --organisation "$org_name" --version)
               echo "API version is: ${api_version}"
               (git tag | grep $api_version && echo "build=no" >> $GITHUB_OUTPUT) || (echo "build=yes" >>  $GITHUB_OUTPUT)
+          done
 
   generateClientSource:
     name: Generate Sources
