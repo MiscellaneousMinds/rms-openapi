@@ -41,16 +41,17 @@ jobs:
         run: |
           for changed_file in ${{ steps.files.outputs.all }}; do
             if [[ "$changed_file" == services/* ]]; then
-              echo "Processing: ${changed_file}"
+                echo "Processing: ${changed_file}"
 
-              org_name=$(echo "$changed_file" | cut -d'/' -f2)
+                org_name=$(echo "$changed_file" | cut -d'/' -f2)
 
-              echo "Detected org: $org_name"
+                echo "Detected org: $org_name"
 
-              git fetch --all --tags
-              api_version=$(node ./version-bump.js --organisation "$org_name" --version)
-              echo "API version is: ${api_version}"
-              (git tag | grep $api_version && echo "build=no" >> $GITHUB_OUTPUT) || (echo "build=yes" >>  $GITHUB_OUTPUT)
+                git fetch --all --tags
+                api_version=$(node ./version-bump.js --organisation "$org_name" --version)
+                echo "API version is: ${api_version}"
+                (git tag | grep $api_version && echo "build=no" >> $GITHUB_OUTPUT) || (echo "build=yes" >>  $GITHUB_OUTPUT)
+            fi
           done
 
   generateClientSource:
