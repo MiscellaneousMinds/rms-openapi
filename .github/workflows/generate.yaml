@@ -39,19 +39,6 @@ jobs:
       - id: confirm-build-clients
         name: Confirm Client Build
         run: |
-          jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - id: files
-        uses: jitterbit/get-changed-files@v1
-        with:
-          format: 'space-delimited' # Or 'csv', 'json'
-
-      - name: Process Changed Files
-        run: |
           for changed_file in ${{ steps.files.outputs.all }}; do
             if [[ "$changed_file" == services/* ]]; then
               echo "Processing: ${changed_file}"
@@ -64,8 +51,7 @@ jobs:
               api_version=$(node ./version-bump.js --organisation "$org_name" --version)
               echo "API version is: ${api_version}"
               (git tag | grep $api_version && echo "build=no" >> $GITHUB_OUTPUT) || (echo "build=yes" >>  $GITHUB_OUTPUT)
-          done
-          
+
   generateClientSource:
     name: Generate Sources
     runs-on: ubuntu-latest
