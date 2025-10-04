@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: validateSpecs
     env:
-      OPENAPI_GENERATOR_VERSION: "6.1.0"
+      OPENAPI_GENERATOR_VERSION: "7.15.0"
 
     if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && needs.validateSpecs.outputs.build == 'yes'
 

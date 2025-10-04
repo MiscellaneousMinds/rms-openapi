@@ -4,6 +4,7 @@ const YAML = require("js-yaml");
 const config = require("./config.json");
 const { substituteProperties, getDirectoryFiles } = require("./lib/utils");
 const X = require("./lib/custom-fields");
+const { getStateData } = require("./lib/state");
 
 let supportedLanguages = ["rust"];
 
@@ -23,22 +24,39 @@ const IS_RELEASE = process.env.GITHUB_REF === "refs/heads/main";
 const SNAPSHOT_NUMBER = Math.round(Date.now() / 10000);
 const CHECKPOINT = "[ $? != 0 ] && exit 25";
 
-const buildPackageBuildScript = async (options, deploy = true) => {
+const buildPackageBuildScript = async (options, state, deploy = true) => {
   let script = "";
-  switch (options["generator-name"]) {
-    case "rust":
-      script += `cargo package\n`;
-      script += `cd target/package && ls -a && cd ../..\n`;
-      if (deploy) {
-        script += `cloudsmith push cargo ${cloudSmithRegistry} ./target/package/${options.configOptions.packageName}-${options.configOptions.packageVersion}.crate --republish\n`;
-      }
-      break;
-    // eslint-disable-next-line no-fallthrough
-    default:
-      throw new Error("Unable to generate build script for specified language");
-  }
+  const packageState = state.mappings.find(s => s.organization === "" && s.serviceId === "");
 
-  // script += `\n[ \\$\? != 0 ] && exit 25 \n`; TODO:
+  console.log("Found package state: ", packageState);
+
+  if (packageState) {
+    const [organisation, repoName] = packageState.repository.split("/");
+    const repoCloneUrl = `https://x-access-token:${GITHUB_TOKEN}@github.com/${organisation}/${repoName}.git`;
+
+    console.log("Repo clone url: ", repoCloneUrl);
+
+    script += `git clone ${repoCloneUrl}`
+    script += `cd ${repoName}`;
+
+    script += `rm -rf ${packageState.libPath}`;
+    script += `ls`
+
+    // switch (options["generator-name"]) {
+    //   case "rust":
+    //     script += `cargo package\n`;
+    //     script += `cd target/package && ls -a && cd ../..\n`;
+    //     if (deploy) {
+    //       script += `cloudsmith push cargo ${cloudSmithRegistry} ./target/package/${options.configOptions.packageName}-${options.configOptions.packageVersion}.crate --republish\n`;
+    //     }
+    //     break;
+    //   // eslint-disable-next-line no-fallthrough
+    //   default:
+    //     throw new Error("Unable to generate build script for specified language");
+    // }
+
+    // script += `\n[ \\$\? != 0 ] && exit 25 \n`; TODO:
+  }
 
   return `echo "#!/bin/bash
 cd \\"\\$(dirname \\"\\$0\\")\\"
@@ -59,9 +77,8 @@ const getGeneratorArguments = (options) => {
     _GIT_USER_ID_: githubOrganization.toLowerCase(),
     _ARTIFACT_VERSION_: options.version,
     _VERSION_SUFFIX_: IS_RELEASE ? "RELEASE" : "SNAPSHOT",
-    _PUB_VERSION_: `${version}${
-      IS_RELEASE ? "" : "-SNAPSHOT." + SNAPSHOT_NUMBER
-    }`,
+    _PUB_VERSION_: `${version}${IS_RELEASE ? "" : "-SNAPSHOT." + SNAPSHOT_NUMBER
+      }`,
     _ARTIFACT_URL_: `https://github.com/${githubRepository}`,
     _DEVELOPER_NAME_: developerName,
     _DEVELOPER_EMAIL_: developerEmail,
@@ -89,7 +106,7 @@ const buildGeneratorCommand = (options) => {
   return cliArgs.join(" \\\n");
 };
 
-const createScriptForSpec = async (specPath, languages, output) => {
+const createScriptForSpec = async (specPath, languages, output, state) => {
   let outputScript = [];
   const fileContent = fs.readFileSync(specPath, { encoding: "utf8" });
   const apiSpec = YAML.load(fileContent);
@@ -117,7 +134,7 @@ const createScriptForSpec = async (specPath, languages, output) => {
     outputScript.push(
       generatorCommand,
       CHECKPOINT,
-      await buildPackageBuildScript(langConfig),
+      await buildPackageBuildScript(langConfig, state),
       ""
     );
   }
@@ -148,11 +165,14 @@ const generate = async () => {
     files.filter((f) => /\.ya?ml$/i.test(f))
   );
 
+  const state = getStateData();
+
   for (const specPath of allFiles) {
     const script = await createScriptForSpec(
       specPath,
       supportedLanguages,
-      output
+      output,
+      state
     );
     if (script.length > 0) {
       FINAL_OUTPUT.push(...script);
