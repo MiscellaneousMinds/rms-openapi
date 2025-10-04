@@ -1,24 +1,12 @@
 const fs = require("fs");
 const path = require("path");
 const YAML = require("js-yaml");
-const config = require("./config.json");
+const configValues = require("./config.json");
 const { substituteProperties, getDirectoryFiles } = require("./lib/utils");
 const X = require("./lib/custom-fields");
 const { getStateData } = require("./lib/state");
 
 let supportedLanguages = ["rust"];
-
-const {
-  generatorCommand,
-  githubRepository,
-  developerName,
-  developerEmail,
-  developerOrganization,
-  packageName,
-  githubOrganization,
-  version,
-  cloudSmithRegistry,
-} = config;
 
 const IS_RELEASE = process.env.GITHUB_REF === "refs/heads/main";
 const SNAPSHOT_NUMBER = Math.round(Date.now() / 10000);

@@ -1,12 +1,25 @@
 {
-  "version": "1.0.4",
-  "githubOrganization": "MiscellaneousMinds",
-  "developerName": "AdeThorMiwa",
-  "developerEmail": "BenDaMyth@gmail.com",
-  "githubRepository": "MiscellaneousMinds/artifacts",
-  "developerOrganization": "Miscellaneous Minds",
-  "packageName": "com.miscellaneousminds.services",
-  "ingressUrl": "https://staging-ingress.miscminds.com",
-  "generatorCommand": "java -cp './code-templates/java/java-spring-custom.jar:./codegen/openapi-generator-cli.jar' org.openapitools.codegen.OpenAPIGenerator",
-  "cloudSmithRegistry": "miscellaneous-minds/pulse-repo"
+  "MiscellaneousMinds": {
+    "version": "1.0.4",
+    "githubOrganization": "MiscellaneousMinds",
+    "developerName": "AdeThorMiwa",
+    "developerEmail": "BenDaMyth@gmail.com",
+    "githubRepository": "MiscellaneousMinds/artifacts",
+    "developerOrganization": "Miscellaneous Minds",
+    "packageName": "com.miscellaneousminds.services",
+    "ingressUrl": "https://staging-ingress.miscminds.com",
+    "generatorCommand": "java -cp './code-templates/java/java-spring-custom.jar:./codegen/openapi-generator-cli.jar' org.openapitools.codegen.OpenAPIGenerator",
+    "cloudSmithRegistry": "miscellaneous-minds/pulse-repo"
+  },
+  "AdeThorMiwa": {
+    "version": "1.0.4",
+    "githubOrganization": "AdeThorMiwa",
+    "developerName": "AdeThorMiwa",
+    "developerEmail": "BenDaMyth@gmail.com",
+    "githubRepository": "AdeThorMiwa/artifacts",
+    "developerOrganization": "AdeThorMiwa",
+    "packageName": "com.adethormiwa.clients",
+    "ingressUrl": "https://staging-ingress.miscminds.com",
+    "generatorCommand": "java -cp './code-templates/java/java-spring-custom.jar:./codegen/openapi-generator-cli.jar' org.openapitools.codegen.OpenAPIGenerator"
+  }
 }
