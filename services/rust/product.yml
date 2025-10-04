@@ -7,7 +7,7 @@ info:
     name: AdeThorMiwa
     email: BenDaMyth@gmail.com
 x-service-id: product
-x-organization: rust
+x-organization: AdeThorMiwa
 tags:
   - name: product
 paths:

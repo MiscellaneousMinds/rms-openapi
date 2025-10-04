@@ -1,5 +1,5 @@
 openapi: 3.0.3
-x-organization: rust
+x-organization: AdeThorMiwa
 x-service-id: api-gateway
 info:
   version: 1.0.1
