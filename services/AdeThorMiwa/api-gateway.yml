@@ -44,7 +44,7 @@ paths:
         - authToken: []
       tags:
         - stashio-api-product
-      summary: Fetch product list dddd
+      summary: Fetch product list
       operationId: getProductList
       x-visibility: public
       responses:
