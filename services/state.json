@@ -7,6 +7,16 @@
       "targetPath": "rust/product.yml",
       "organization": "rust",
       "serviceId": "product"
+    },
+    {
+      "repository": "AdeThorMiwa/stashio",
+      "sourcePath": "specs/api-spec.yaml",
+      "hash": "0475d364ccbe4a54829d39507076c359ce1e70ca5910a8c5a753d2bab2318c8c",
+      "targetPath": "AdeThorMiwa/stashio-api.yml",
+      "organization": "AdeThorMiwa",
+      "serviceId": "stashio-api",
+      "libPath": "crates",
+      "libPackageName": "api_client"
     }
   ]
 }
