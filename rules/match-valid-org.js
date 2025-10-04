@@ -9,7 +9,7 @@ module.exports = {
     field: "x-organization",
     function: pattern,
     functionOptions: {
-      match: /^(rust|AdeThorMiwa)$/,
+      match: /^(stashio|AdeThorMiwa)$/,
     },
   },
 };
