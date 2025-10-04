@@ -21,12 +21,12 @@ jobs:
     outputs:
       build: ${{steps.confirm-build-clients.outputs.build}}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           persist-credentials: true
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: "14"
+          node-version: "21"
           cache: "npm"
           cache-dependency-path: package-lock.json
       - name: Install NPM
@@ -34,14 +34,38 @@ jobs:
       - name: Run Validation
         run: |
           ls services/**/*.y*ml | xargs ./node_modules/.bin/lint-openapi -e
+      - id: files
+        uses: jitterbit/get-changed-files@v1
       - id: confirm-build-clients
         name: Confirm Client Build
         run: |
-          git fetch --all --tags
-          api_version=$(node ./version-bump.js --version)
-          echo "API version is: ${api_version}"
-          (git tag | grep $api_version && echo "build=no" >> $GITHUB_OUTPUT) || (echo "build=yes" >>  $GITHUB_OUTPUT)
+          jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
+      - id: files
+        uses: jitterbit/get-changed-files@v1
+        with:
+          format: 'space-delimited' # Or 'csv', 'json'
+
+      - name: Process Changed Files
+        run: |
+          for changed_file in ${{ steps.files.outputs.all }}; do
+            if [[ "$changed_file" == services/* ]]; then
+              echo "Processing: ${changed_file}"
+
+              org_name=$(echo "$changed_file" | cut -d'/' -f2)
+
+              echo "Detected org: $org_name"
+
+              git fetch --all --tags
+              api_version=$(node ./version-bump.js --organisation "$org_name" --version)
+              echo "API version is: ${api_version}"
+              (git tag | grep $api_version && echo "build=no" >> $GITHUB_OUTPUT) || (echo "build=yes" >>  $GITHUB_OUTPUT)
+          done
+          
   generateClientSource:
     name: Generate Sources
     runs-on: ubuntu-latest

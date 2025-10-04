@@ -1,4 +1,4 @@
-const config = require("./config.json");
+const configValues = require("./config.json");
 
 const { hideBin } = require("yargs/helpers");
 const yargs = require("yargs/yargs");
@@ -19,13 +19,20 @@ const getCliOptions = () => {
       default: false,
       type: "boolean",
     })
-    .version(config.version)
+    .option("organisation", {
+      describe: "Organisation to update",
+      type: "string",
+    })
+    .demandOption(["organisation"])
     .help().argv;
 };
 
+const args = getCliOptions();
+const config = configValues[args.organisation];
+
 let [major, minor, patch] = config.version.split(".").map((nk) => parseInt(nk));
 
-const args = getCliOptions();
+
 switch (args.semver) {
   case "major":
     major++;
@@ -42,7 +49,7 @@ switch (args.semver) {
 
 config.version = [major, minor, patch].join(".");
 
-const newContent = JSON.stringify(config, null, "  ");
+const newContent = JSON.stringify({ ...configValues, [args.organisation]: config }, null, "  ");
 if (args.dryRun) {
   console.log(newContent);
 } else {
