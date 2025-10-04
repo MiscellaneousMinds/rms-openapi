@@ -1,10 +1,12 @@
 const fs = require("fs");
 const path = require("path");
 const YAML = require("js-yaml");
-const configValues = require("./config.json");
 const { substituteProperties, getDirectoryFiles } = require("./lib/utils");
 const X = require("./lib/custom-fields");
 const { getStateData } = require("./lib/state");
+const { hideBin } = require("yargs/helpers");
+const yargs = require("yargs/yargs");
+const configValues = require("./config.json");
 
 let supportedLanguages = ["rust"];
 
@@ -12,11 +14,11 @@ const IS_RELEASE = process.env.GITHUB_REF === "refs/heads/main";
 const SNAPSHOT_NUMBER = Math.round(Date.now() / 10000);
 const CHECKPOINT = "[ $? != 0 ] && exit 25";
 
-const buildPackageBuildScript = async (options, state, deploy = true) => {
+const buildPackageBuildScript = async (options, state, organisation, deploy = true) => {
   let script = "";
-  const packageState = state.mappings.find(s => s.organization === "" && s.serviceId === "");
+  const packageState = state.mappings.find(s => s.organization === organisation.githubOrganization && s.serviceId === "");
 
-  console.log("Found package state: ", packageState);
+  console.log("Found package state: ", packageState, state, organisation);
 
   if (packageState) {
     const [organisation, repoName] = packageState.repository.split("/");
@@ -51,7 +53,7 @@ cd \\"\\$(dirname \\"\\$0\\")\\"
 ${script}" > ${options.output}/publish.sh`;
 };
 
-const getGeneratorArguments = (options) => {
+const getGeneratorArguments = (options, organisation) => {
   const base = require("./code-templates/args-base.json");
   const allArgs = {
     rust: {
@@ -62,21 +64,21 @@ const getGeneratorArguments = (options) => {
 
   return substituteProperties(allArgs, {
     _GIT_REPO_ID_: path.basename(githubRepository),
-    _GIT_USER_ID_: githubOrganization.toLowerCase(),
+    _GIT_USER_ID_: organisation.githubOrganization.toLowerCase(),
     _ARTIFACT_VERSION_: options.version,
     _VERSION_SUFFIX_: IS_RELEASE ? "RELEASE" : "SNAPSHOT",
-    _PUB_VERSION_: `${version}${IS_RELEASE ? "" : "-SNAPSHOT." + SNAPSHOT_NUMBER
+    _PUB_VERSION_: `${organisation.version}${IS_RELEASE ? "" : "-SNAPSHOT." + SNAPSHOT_NUMBER
       }`,
     _ARTIFACT_URL_: `https://github.com/${githubRepository}`,
-    _DEVELOPER_NAME_: developerName,
-    _DEVELOPER_EMAIL_: developerEmail,
-    _DEVELOPER_ORGANIZATION_: developerOrganization,
-    _ARTIFACT_GROUP_ID_: packageName,
+    _DEVELOPER_NAME_: organisation.developerName,
+    _DEVELOPER_EMAIL_: organisation.developerEmail,
+    _DEVELOPER_ORGANIZATION_: organisation.developerOrganization,
+    _ARTIFACT_GROUP_ID_: organisation.packageName,
   });
 };
 
-const buildGeneratorCommand = (options) => {
-  const cliArgs = [`${generatorCommand} generate`];
+const buildGeneratorCommand = (options, organisation) => {
+  const cliArgs = [`${organisation.generatorCommand} generate`];
 
   for (const opt in options) {
     if (opt !== "configOptions") {
@@ -94,7 +96,7 @@ const buildGeneratorCommand = (options) => {
   return cliArgs.join(" \\\n");
 };
 
-const createScriptForSpec = async (specPath, languages, output, state) => {
+const createScriptForSpec = async (specPath, languages, output, state, organisation) => {
   let outputScript = [];
   const fileContent = fs.readFileSync(specPath, { encoding: "utf8" });
   const apiSpec = YAML.load(fileContent);
@@ -105,7 +107,7 @@ const createScriptForSpec = async (specPath, languages, output, state) => {
   const fullName = `${organization}-${serviceId}`;
   const outputPrefix = serviceId === "common" ? "00000-" : "";
 
-  let generatorArgs = getGeneratorArguments({ version });
+  let generatorArgs = getGeneratorArguments({ version }, organisation);
 
   for (const language of languages) {
     const langConfig = substituteProperties(generatorArgs[language], {
@@ -113,7 +115,7 @@ const createScriptForSpec = async (specPath, languages, output, state) => {
       _ARTIFACT_ID_: `${organization}-${serviceId}`,
       _OUTPUT_: `${output}/${language}/${outputPrefix}${fullName}`,
     });
-    const generatorCommand = buildGeneratorCommand(langConfig);
+    const generatorCommand = buildGeneratorCommand(langConfig, organisation);
 
     outputScript.push(
       "",
@@ -122,7 +124,7 @@ const createScriptForSpec = async (specPath, languages, output, state) => {
     outputScript.push(
       generatorCommand,
       CHECKPOINT,
-      await buildPackageBuildScript(langConfig, state),
+      await buildPackageBuildScript(langConfig, state, organisation),
       ""
     );
   }
@@ -131,7 +133,8 @@ const createScriptForSpec = async (specPath, languages, output, state) => {
 };
 
 // generate and list files
-const generate = async () => {
+const generate = async (org) => {
+  const organisation = configValues[org];
   let specFolder = "./services";
   let output = "generated-sources";
   let scriptPath = "generate.sh";
@@ -160,7 +163,8 @@ const generate = async () => {
       specPath,
       supportedLanguages,
       output,
-      state
+      state,
+      organisation
     );
     if (script.length > 0) {
       FINAL_OUTPUT.push(...script);
@@ -175,7 +179,19 @@ const generate = async () => {
   });
 };
 
-generate().catch((err) => {
+const getCliOptions = () => {
+  // noinspection JSUnresolvedFunction
+  return yargs(hideBin(process.argv))
+    .option("organisation", {
+      describe: "Organisation to update",
+      type: "string",
+    })
+    .demandOption(["organisation"])
+    .help().argv;
+};
+
+const opts = getCliOptions();
+generate(opts.organisation).catch((err) => {
   console.error("Execution error occurred");
   console.error(err.message, err.stack);
   process.exit(2);

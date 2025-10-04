@@ -39,6 +39,7 @@ jobs:
       - id: confirm-build-clients
         name: Confirm Client Build
         run: |
+          org_name=""
           for changed_file in ${{ steps.files.outputs.all }}; do
             if [[ "$changed_file" == services/* ]]; then
                 echo "Processing: ${changed_file}"
@@ -46,13 +47,14 @@ jobs:
                 org_name=$(echo "$changed_file" | cut -d'/' -f2)
 
                 echo "Detected org: $org_name"
-
-                git fetch --all --tags
-                api_version=$(node ./version-bump.js --organisation "$org_name" --version)
-                echo "API version is: ${api_version}"
-                (git tag | grep $api_version && echo "build=no" >> $GITHUB_OUTPUT) || (echo "build=yes" >>  $GITHUB_OUTPUT)
             fi
           done
+
+          echo "organisation=$org_name" >> $GITHUB_OUTPUT
+          git fetch --all --tags
+          api_version=$(node ./version-bump.js --organisation "$org_name" --version)
+          echo "API version is: ${api_version}"
+          (git tag | grep $api_version && echo "build=no" >> $GITHUB_OUTPUT) || (echo "build=yes" >>  $GITHUB_OUTPUT)
 
   generateClientSource:
     name: Generate Sources
@@ -88,7 +90,7 @@ jobs:
 
       - name: Make Script
         run: |
-          node ./generate.js
+          node ./generate.js --organisation ${{ needs.validateSpecs.outputs.organisation }}
 
       - name: Run Make Script
         run: sh generate.sh
