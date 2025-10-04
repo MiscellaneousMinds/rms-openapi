@@ -29,7 +29,7 @@
     "tags": [
      "product"
     ],
-    "summary": "Fetch product list dddd",
+    "summary": "Fetch product list",
     "operationId": "getProductList",
     "x-visibility": "public",
     "responses": {
